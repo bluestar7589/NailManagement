@@ -6,6 +6,7 @@ The project is built using Entity Framework and SQL Server.
 **Authors:**
 
 [Thien Nguyen](https://github.com/bluestar7589)
+[Ivan Vanwoerkom](https://github.com/ScottProgrammer88)
 
 
 ## Getting started
