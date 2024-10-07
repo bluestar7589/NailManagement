@@ -1,11 +1,12 @@
 # NailSalonManagement with Entity Framework
 
-This project is a simple nail salon management system that allows the user to manage the salon's supplies, employees, and customers. 
+This project is a simple nail salon management system allowing users to manage the salon's supplies, employees, and customers. 
 The project is built using Entity Framework and SQL Server.
 
 **Authors:**
 
 [Thien Nguyen](https://github.com/bluestar7589)
+
 [Ivan Vanwoerkom](https://github.com/ScottProgrammer88)
 
 
@@ -15,12 +16,12 @@ The project is built using Entity Framework and SQL Server.
 - .Net 8
 - [Nail Salon Management](NailSalonManagement.sql) installed
 
-### Step one - Run the query to generate the database in the sql server
+### Step one - Run the query to generate the database in the SQL server
 You can generate the database by using SQL Server Object Explorer in VS 2022 or using SQL Server Management Studio.
 
 ### Step two - generate models from the database
 
-Click on Tools -> nuget package manager -> package manager console
+Click on Tools -> Nuget package manager -> Package manager console
 Type the command below to generate the models
 ```csharp
 Scaffold-DbContext 'Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=NailSalon' Microsoft.EntityFrameworkCore.SqlServer
