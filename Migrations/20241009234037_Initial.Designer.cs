@@ -12,7 +12,7 @@ using NailManagement.Data;
 namespace NailManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241009125827_Initial")]
+    [Migration("20241009234037_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -280,6 +280,9 @@ namespace NailManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
 
+                    b.Property<DateOnly?>("DateOfBirth")
+                        .HasColumnType("date");
+
                     b.Property<string>("Email")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -288,8 +291,8 @@ namespace NailManagement.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateOnly?>("JoinDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("JoinDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(50)
@@ -509,6 +512,12 @@ namespace NailManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TechnicianId"));
 
+                    b.Property<DateOnly?>("DateOfBirth")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FirstName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -516,6 +525,9 @@ namespace NailManagement.Migrations
                     b.Property<string>("LastName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePicture")
                         .HasMaxLength(255)

@@ -14,12 +14,8 @@ The project is built using Entity Framework and SQL Server.
 
 - Visual Studio 2022
 - .Net 8
-- [Nail Salon Management](NailSalonManagement.sql) installed
 
-### Step one - Run the query to generate the database in the SQL server
-You can generate the database by using SQL Server Object Explorer in VS 2022 or using SQL Server Management Studio.
-
-### Step two - generate models from the database
+### Generate database from the Models
 
 Click on Tools -> Nuget package manager -> Package manager console
 Type the command below to generate the models
