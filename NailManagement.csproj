@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\NailSalonContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="NailSalonManagement.sql" />
   </ItemGroup>
 

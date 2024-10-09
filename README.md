@@ -24,7 +24,7 @@ You can generate the database by using SQL Server Object Explorer in VS 2022 or 
 Click on Tools -> Nuget package manager -> Package manager console
 Type the command below to generate the models
 ```csharp
-Scaffold-DbContext 'Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=NailSalon' Microsoft.EntityFrameworkCore.SqlServer
+Update-Database
 ```
 
 You may need to change the DB connection string located in the ApplicationDbContext class.
