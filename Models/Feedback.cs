@@ -13,7 +13,7 @@ public partial class Feedback
 
     public string? Comments { get; set; }
 
-    public DateTime? FeedbackDate { get; set; }
+    public DateOnly? FeedbackDate { get; set; }
 
     public virtual Appointment? Appointment { get; set; }
 }

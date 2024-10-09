@@ -15,5 +15,5 @@ public partial class Inventory
 
     public int? ReorderLevel { get; set; }
 
-    public DateTime? LastUpdated { get; set; }
+    public DateOnly? LastUpdated { get; set; }
 }

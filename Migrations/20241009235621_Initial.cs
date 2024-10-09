@@ -56,7 +56,7 @@ namespace NailManagement.Migrations
                 {
                     CustomerID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    JoinDate = table.Column<DateOnly>(type: "date", nullable: true),
                     LoyaltyPoints = table.Column<int>(type: "int", nullable: true, defaultValue: 0),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -79,7 +79,7 @@ namespace NailManagement.Migrations
                     Quantity = table.Column<int>(type: "int", nullable: true),
                     Supplier = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ReorderLevel = table.Column<int>(type: "int", nullable: true),
-                    LastUpdated = table.Column<DateTime>(type: "datetime", nullable: true)
+                    LastUpdated = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -237,7 +237,7 @@ namespace NailManagement.Migrations
                     CustomerID = table.Column<int>(type: "int", nullable: true),
                     PointsEarned = table.Column<int>(type: "int", nullable: true),
                     PointsRedeemed = table.Column<int>(type: "int", nullable: true),
-                    TransactionDate = table.Column<DateTime>(type: "datetime", nullable: true)
+                    TransactionDate = table.Column<DateTime>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -312,7 +312,7 @@ namespace NailManagement.Migrations
                     AppointmentID = table.Column<int>(type: "int", nullable: true),
                     Rating = table.Column<int>(type: "int", nullable: true),
                     Comments = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    FeedbackDate = table.Column<DateTime>(type: "datetime", nullable: true)
+                    FeedbackDate = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -332,7 +332,7 @@ namespace NailManagement.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AppointmentID = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    PaymentDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    PaymentDate = table.Column<DateOnly>(type: "date", nullable: true),
                     PaymentMethod = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Tip = table.Column<decimal>(type: "decimal(10,2)", nullable: true)
                 },

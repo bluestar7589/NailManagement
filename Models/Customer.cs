@@ -7,7 +7,7 @@ public partial class Customer : Person
 {
     public int CustomerId { get; set; }
 
-    public DateTime? JoinDate { get; set; }
+    public DateOnly? JoinDate { get; set; }
 
     public int? LoyaltyPoints { get; set; }
 

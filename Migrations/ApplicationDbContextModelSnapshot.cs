@@ -288,8 +288,8 @@ namespace NailManagement.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("JoinDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly?>("JoinDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(50)
@@ -331,8 +331,8 @@ namespace NailManagement.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime?>("FeedbackDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateOnly?>("FeedbackDate")
+                        .HasColumnType("date");
 
                     b.Property<int?>("Rating")
                         .HasColumnType("int");
@@ -354,8 +354,8 @@ namespace NailManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
+                    b.Property<DateOnly?>("LastUpdated")
+                        .HasColumnType("date");
 
                     b.Property<string>("ProductName")
                         .HasMaxLength(100)
@@ -397,7 +397,7 @@ namespace NailManagement.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("TransactionDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.HasKey("LoyaltyId")
                         .HasName("PK__LoyaltyP__8D45791354A4EEA8");
@@ -423,8 +423,8 @@ namespace NailManagement.Migrations
                         .HasColumnType("int")
                         .HasColumnName("AppointmentID");
 
-                    b.Property<DateTime?>("PaymentDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateOnly?>("PaymentDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("PaymentMethod")
                         .HasMaxLength(50)

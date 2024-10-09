@@ -85,7 +85,7 @@ namespace NailManagement.Data
                 entity.Property(e => e.FeedbackId).HasColumnName("FeedbackID");
                 entity.Property(e => e.AppointmentId).HasColumnName("AppointmentID");
                 entity.Property(e => e.Comments).HasMaxLength(255);
-                entity.Property(e => e.FeedbackDate).HasColumnType("datetime");
+                entity.Property(e => e.FeedbackDate).HasColumnType("date");
 
                 entity.HasOne(d => d.Appointment).WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.AppointmentId)
@@ -99,7 +99,7 @@ namespace NailManagement.Data
                 entity.ToTable("Inventory");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
-                entity.Property(e => e.LastUpdated).HasColumnType("datetime");
+                entity.Property(e => e.LastUpdated).HasColumnType("date");
                 entity.Property(e => e.ProductName).HasMaxLength(100);
                 entity.Property(e => e.Supplier).HasMaxLength(100);
             });
@@ -110,7 +110,7 @@ namespace NailManagement.Data
 
                 entity.Property(e => e.LoyaltyId).HasColumnName("LoyaltyID");
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
-                entity.Property(e => e.TransactionDate).HasColumnType("datetime");
+                entity.Property(e => e.TransactionDate).HasColumnType("date");
 
                 entity.HasOne(d => d.Customer).WithMany(p => p.LoyaltyPointsNavigation)
                     .HasForeignKey(d => d.CustomerId)
@@ -124,7 +124,7 @@ namespace NailManagement.Data
                 entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
                 entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.AppointmentId).HasColumnName("AppointmentID");
-                entity.Property(e => e.PaymentDate).HasColumnType("datetime");
+                entity.Property(e => e.PaymentDate).HasColumnType("date");
                 entity.Property(e => e.PaymentMethod).HasMaxLength(50);
                 entity.Property(e => e.Tip).HasColumnType("decimal(10, 2)");
 
