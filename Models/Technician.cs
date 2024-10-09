@@ -3,13 +3,9 @@ using System.Collections.Generic;
 
 namespace NailManagement.Models;
 
-public partial class Technician
+public partial class Technician : Person
 {
     public int TechnicianId { get; set; }
-
-    public string? FirstName { get; set; }
-
-    public string? LastName { get; set; }
 
     public string? Specialties { get; set; }
 

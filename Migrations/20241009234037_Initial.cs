@@ -56,12 +56,13 @@ namespace NailManagement.Migrations
                 {
                     CustomerID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LoyaltyPoints = table.Column<int>(type: "int", nullable: true, defaultValue: 0),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    JoinDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    LoyaltyPoints = table.Column<int>(type: "int", nullable: true, defaultValue: 0)
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -107,11 +108,14 @@ namespace NailManagement.Migrations
                 {
                     TechnicianID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Specialties = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Rating = table.Column<decimal>(type: "decimal(3,2)", nullable: true),
-                    ProfilePicture = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                    ProfilePicture = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
