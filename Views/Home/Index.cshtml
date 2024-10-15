@@ -1,8 +1,123 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model NailManagement.Models.IndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nail Management Dashboard</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left Part: Technician List -->
+            <div class="col-md-3 technician-list bg-light p-3">
+                <h2>Technicians</h2>
+                @if (Model.Technicians == null || Model.Technicians.Count == 0)
+                {
+                    <h3>There is no technician</h3>
+                } else {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Available</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var technician in Model.Technicians)
+                        {
+                            <tr>
+                                <td>@technician.FirstName @technician.LastName</td> 
+                                <td>
+                                    <input type="checkbox" id="@technician.TechnicianId" name="@technician.TechnicianId" />
+                                </td>
+                            </tr>
+                            
+                        }
+                    </tbody>
+                </table>
+                }
+            </div>
+
+            <!-- Middle Part: Schedule -->
+            <div class="col-md-6 schedule bg-white p-3">
+                <h5>Schedule for @DateTime.Today.Date.ToShortDateString()</h5>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Open: 9:00 AM - Close: 6:00 PM</span>
+                    <button class="btn btn-primary" id="addAppointmentBtn">+</button>
+                </div>
+                <div class="list-group" id="scheduleList">
+                    <!-- Appointments and available slots will be dynamically added here -->
+                    <h2>Appointments</h2>
+                    @if (Model.Appointments == null || Model.Appointments.Count == 0)
+                    {
+                        <h3>No Appointment</h3>   
+                    } else {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Time</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var appointment in Model.Appointments)
+                            {
+                                <tr>
+                                    <td>@appointment.CustomerName</td>
+                                    <td>@appointment.AppointmentDate.ToString("HH:mm")</td>
+                                    <td>
+                                        <!--Javascript:void(0) - The void operator evaluates the expression inside the parentheses and returns undefined.
+                                        In this case, 0 is evaluated, but it could be any expression. The result is that the link does nothing when clicked.-->
+                                        <button class="btn btn-info" onclick="showDetails(@appointment.AppointmentID)">Details</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    }
+                </div>
+            </div>
+
+            <!-- Right Part: Appointment Details -->
+            <div class="col-md-3 appointment-details bg-light p-3">
+                <h5>Appointment Details</h5>
+                <div id="appointmentDetails">
+                    <!-- Appointment details will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const appointments = @Html.Raw(Json.Serialize(Model.Appointments));
+    
+
+    window.showDetails = function(appointmentId) {
+        const appointment = appointments.find(app => app.appointmentID === appointmentId);
+        if (appointment) {
+            const appointmentDate = new Date(appointment.appointmentDate);
+            const formattedDate = appointmentDate.toLocaleDateString();
+            const formattedTime = appointmentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const formattedPrice = parseFloat(appointment.price).toFixed(2);
+
+            document.getElementById('appointmentDetails').innerHTML = `
+                <p><strong>Customer Name:</strong> ${appointment.customerName}</p>
+                <p><strong>Technician Name:</strong> ${appointment.technicianName}</p>
+                <p><strong>Appointment Date:</strong> ${formattedDate} ${formattedTime}</p>
+                <p><strong>Service:</strong> ${appointment.service}</p>
+                <p><strong>Price:</strong> ${formattedPrice}</p>
+            `;
+        }
+    };
+</script>
+
+</body>
+</html>
