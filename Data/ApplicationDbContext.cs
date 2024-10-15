@@ -8,6 +8,10 @@ namespace NailManagement.Data
     {
         private readonly IConfiguration _configuration;
 
+        public ApplicationDbContext()
+        {
+        }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration)
             : base(options)
         {
@@ -30,6 +34,8 @@ namespace NailManagement.Data
             {
                 var connectionString = _configuration.GetConnectionString("DefaultConnection");
                 optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseSqlServer(connectionString)
+                          .LogTo(Console.WriteLine, LogLevel.Information);
             }
         }
 
