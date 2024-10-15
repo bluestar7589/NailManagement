@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NailManagement.Data;
 using NailManagement.Models;
 using System.Diagnostics;
 
@@ -8,14 +10,27 @@ namespace NailManagement.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        /// <summary>
+        /// To keep the connection to the database
+        /// </summary>
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new IndexViewModel
+            {
+                // Get all appointments and technicians
+                Appointments = AppointmentDB.GetAllAppointments(_context),
+                Technicians = TechnicianDB.GetAllTechnicians(_context)
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()

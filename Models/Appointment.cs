@@ -29,3 +29,27 @@ public partial class Appointment
 
     public virtual Technician? Technician { get; set; }
 }
+
+/// <summary>
+/// Create the ProductDTO class to store the appointment information with join condition
+/// </summary>
+public class AppointmentDTO
+{
+
+    public int AppointmentID { get; set; }
+
+    public String CustomerName { get; set; }
+
+    public String TechnicianName { get; set; }
+
+    public string Service { get; set; }
+
+    public double Price { get; set; }
+
+    public DateTime AppointmentDate { get; set; }
+
+    public String Status { get; set; }
+
+    public String Notes { get; set; }
+
+}
