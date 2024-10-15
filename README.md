@@ -28,3 +28,6 @@ By default, it points to mssqllocaldb. You can change it to your own database.
 ```csharp
 optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=NailSalon");
 ```
+
+### Usefull websites for reference
+[Custom User Management in ASP.NET Core MVC with Identity](https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/)
