@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 namespace NailManagement.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -21,6 +22,7 @@ namespace NailManagement.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = IdentityHelper.Admin)]
         public IActionResult Index()
         {
             var viewModel = new IndexViewModel

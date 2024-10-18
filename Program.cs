@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NailManagement.Data;
+using NailManagement.Models;
 
 namespace NailManagement
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +21,12 @@ namespace NailManagement
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            // Register the AdminUserConfig section
+            builder.Services.Configure<AdminUserConfig>(builder.Configuration.GetSection("AdminUser"));
 
             var app = builder.Build();
 
@@ -48,6 +53,17 @@ namespace NailManagement
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+
+            // Create a scope to get services
+            IServiceScope servicesProvider = app.Services.GetRequiredService<IServiceProvider>().CreateScope();
+
+
+            // Call the method to create roles
+            await IdentityHelper.CreateRoles(servicesProvider.ServiceProvider, IdentityHelper.Admin, IdentityHelper.User);
+
+            // Call the method to assign the initial Admin roles
+            await IdentityHelper.CreateUserRole(servicesProvider.ServiceProvider, IdentityHelper.Admin);
 
             app.Run();
         }
