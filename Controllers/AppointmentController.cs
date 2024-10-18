@@ -28,9 +28,9 @@ namespace NailManagement.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            AppointmentDB.GetAppointmentByIDAsync(id);
+            await AppointmentDB.GetAppointmentByIDAsync(id);
             return View();
         }
 
