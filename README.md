@@ -33,3 +33,9 @@ optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog
 [Introduction to Identity on ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio)
 [Custom User Management in ASP.NET Core MVC with Identity](https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/)
 
+### Initial account information
+The initial information for the admin account is:
+- Admin account: admin
+- Password: Admin@123
+Using that information above to login to system to use fulfill features.
+
