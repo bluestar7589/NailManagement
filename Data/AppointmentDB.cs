@@ -20,7 +20,7 @@ namespace NailManagement.Data
                                join c in context.Customers on a.CustomerId equals c.CustomerId
                                join t in context.Technicians on a.TechnicianId equals t.TechnicianId
                                join s in context.Services on a.ServiceId equals s.ServiceId
-                               where a.AppointmentDate.HasValue && a.AppointmentDate.Value.Date == today
+                               where a.AppointmentDate.HasValue && a.AppointmentDate.Value.Date >= today
                                select new AppointmentDTO
                                 {
                                     AppointmentID = a.AppointmentId,
