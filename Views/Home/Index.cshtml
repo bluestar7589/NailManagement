@@ -11,65 +11,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nail Management Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Left Part: Technician List -->
-            <div class="col-md-3 technician-list bg-light p-3">
-                <h2>Technicians</h2>
-                @if (Model.Technicians == null || Model.Technicians.Count == 0)
+        <!-- Left Part: Technician List -->
+        <div class="col-md-3 technician-list bg-light p-3">
+            <h2>Technicians</h2>
+            @if (Model.Technicians == null || Model.Technicians.Count == 0)
+            {
+                <h3>There is no technician</h3>
+            } else {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Available</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var technician in Model.Technicians)
+                    {
+                        <tr>
+                            <td>@technician.FirstName @technician.LastName</td> 
+                            <td>
+                                <input type="checkbox" id="@technician.TechnicianId" name="@technician.TechnicianId" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            }
+        </div>
+
+        <!-- Middle Part: Schedule -->
+        <div class="col-md-6 schedule bg-white p-3">
+            <h5>Schedule for @DateTime.Today.Date.ToShortDateString()</h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span>Open: 9:00 AM - Close: 6:00 PM</span>
+                <button class="btn btn-primary" id="addAppointmentBtn">+</button>
+            </div>
+            <div class="list-group" id="scheduleList">
+                <!-- Appointments and available slots will be dynamically added here -->
+                <h2>Appointments</h2>
+                @if (Model.Appointments == null || Model.Appointments.Count == 0)
                 {
-                    <h3>There is no technician</h3>
+                    <h3>No Appointment</h3>   
                 } else {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Available</th>
+                            <th>Customer Name</th>
+                            <th>Time</th>
+                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var technician in Model.Technicians)
+                        @foreach (var appointment in Model.Appointments)
                         {
-                            <tr>
-                                <td>@technician.FirstName @technician.LastName</td> 
-                                <td>
-                                    <input type="checkbox" id="@technician.TechnicianId" name="@technician.TechnicianId" />
-                                </td>
-                            </tr>
-                            
-                        }
-                    </tbody>
-                </table>
-                }
-            </div>
-
-            <!-- Middle Part: Schedule -->
-            <div class="col-md-6 schedule bg-white p-3">
-                <h5>Schedule for @DateTime.Today.Date.ToShortDateString()</h5>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span>Open: 9:00 AM - Close: 6:00 PM</span>
-                    <button class="btn btn-primary" id="addAppointmentBtn">+</button>
-                </div>
-                <div class="list-group" id="scheduleList">
-                    <!-- Appointments and available slots will be dynamically added here -->
-                    <h2>Appointments</h2>
-                    @if (Model.Appointments == null || Model.Appointments.Count == 0)
-                    {
-                        <h3>No Appointment</h3>   
-                    } else {
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Customer Name</th>
-                                <th>Time</th>
-                                <th>Detail</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var appointment in Model.Appointments)
-                            {
+                            if(appointment.AppointmentDate.Date.ToShortDateString() == DateTime.Today.Date.ToShortDateString()){
                                 <tr>
                                     <td>@appointment.CustomerName</td>
                                     <td>@appointment.AppointmentDate.ToString("HH:mm")</td>
@@ -80,45 +85,70 @@
                                     </td>
                                 </tr>
                             }
-                        </tbody>
-                    </table>
-                    }
-                </div>
+                        }
+                    </tbody>
+                </table>
+                }
             </div>
-
-            <!-- Right Part: Appointment Details -->
-            <div class="col-md-3 appointment-details bg-light p-3">
-                <h5>Appointment Details</h5>
-                <div id="appointmentDetails">
-                    <!-- Appointment details will be dynamically added here -->
+        </div>
+        <!-- Pass the serialized data to a global JavaScript variable -->
+        <script>
+            const appointments = @Html.Raw(Json.Serialize(Model.Appointments));
+        </script>
+        <!-- Modal -->
+        <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailsModalLabel">Appointment Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Appointment details will be dynamically added here -->
+                        <p><strong>Customer Name:</strong> <span id="modalCustomerName"></span></p>
+                        <p><strong>Technician Name:</strong> <span id="modalTechnicianName"></span></p>
+                        <p><strong>Appointment Date:</strong> <span id="modalAppointmentDate"></span></p>
+                        <p><strong>Service:</strong> <span id="modalService"></span></p>
+                        <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Right Part: Future Appointments -->
+        <div class="col-md-3 bg-light p-3">
+            <h5>Future Appointments</h5>
+            <div id="futureAppointments">
+                <!-- Future appointments will be dynamically added here -->
+                @if (Model.Appointments == null || Model.Appointments.Count == 0)
+                {
+                    <h3>No Appointment</h3>
+                }
+                else
+                {
+                    @foreach (var appointment in Model.Appointments)
+                    {
+                        if (appointment.AppointmentDate.Date > DateTime.Today.Date)
+                        {
+
+                            <p><strong>Customer Name:</strong> @appointment.CustomerName</p>
+                            <p><strong>Technician Name:</strong> @appointment.TechnicianName</p>
+                            <p><strong>Appointment Date:</strong> @appointment.AppointmentDate</p>
+                            <p><strong>Service:</strong> @appointment.Service</p>
+                                <p><strong>Price:</strong> @appointment.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</p>
+                        }
+                    }
+                }
+            </div>
+        </div>
     </div>
-
-    <script>
-    const appointments = @Html.Raw(Json.Serialize(Model.Appointments));
-    
-
-    window.showDetails = function(appointmentId) {
-        const appointment = appointments.find(app => app.appointmentID === appointmentId);
-        if (appointment) {
-            const appointmentDate = new Date(appointment.appointmentDate);
-            const formattedDate = appointmentDate.toLocaleDateString();
-            const formattedTime = appointmentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const formattedPrice = parseFloat(appointment.price).toFixed(2);
-
-            document.getElementById('appointmentDetails').innerHTML = `
-                <p><strong>Customer Name:</strong> ${appointment.customerName}</p>
-                <p><strong>Technician Name:</strong> ${appointment.technicianName}</p>
-                <p><strong>Appointment Date:</strong> ${formattedDate} ${formattedTime}</p>
-                <p><strong>Service:</strong> ${appointment.service}</p>
-                <p><strong>Price:</strong> ${formattedPrice}</p>
-            `;
-        }
-    };
-</script>
-
+    <!-- Include the JavaScript file in the head section -->
+    <script src="~/js/site.js"></script>
 </body>
 </html>
 
