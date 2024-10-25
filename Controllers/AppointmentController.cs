@@ -20,7 +20,11 @@ namespace NailManagement.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            return View();
+            // Retrieve all appointments from the database
+            var appointments = _context.Appointments.ToList();
+
+            // Pass the list of appointments to the view
+            return View(appointments);
         }
 
         /// <summary>
@@ -30,7 +34,7 @@ namespace NailManagement.Controllers
         /// <returns></returns>
         public async Task<ActionResult> Details(int id)
         {
-            await AppointmentDB.GetAppointmentByIDAsync(id);
+            await AppointmentDB.GetAppointmentByIDAsync(_context, id);
             return View();
         }
 
