@@ -1,72 +1,43 @@
 ﻿@model IEnumerable<NailManagement.Models.AppointmentCreateViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Appointments";
 }
 
-<h1>Index</h1>
+<h1>Appointments</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create">Create New</a>
 </p>
-@if (Model.Count() == 0)
-{
-	<p>There are no appointments in the database.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Technician</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Notes</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var appointment in Model)
+        {
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.AppointmentDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Notes)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Customer)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Service)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Technician)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-    @foreach (var item in Model) {
-            <tr>
+                <td>@appointment.Customer?.Email</td>
+                <td>@appointment.Technician?.Email</td>
+                <td>@appointment.Service?.ServiceName</td>
+                <td>@(appointment.AppointmentDate?.ToShortDateString() ?? "N/A")</td>
+                <td>@appointment.Status</td>
+                <td>@appointment.Notes</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AppointmentDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Notes)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Customer.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Service.ServiceName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Technician.Email)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.AppointmentId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@appointment.AppointmentId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@appointment.AppointmentId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@appointment.AppointmentId">Delete</a>
                 </td>
             </tr>
-    }
-        </tbody>
-    </table>
-}
+        }
+    </tbody>
+</table>
