@@ -131,17 +131,20 @@
                 }
                 else
                 {
+                    int intCustomer = 1;
                     @foreach (var appointment in Model.Appointments)
                     {
                         if (appointment.AppointmentDate.Date > DateTime.Today.Date)
                         {
 
-                            <p><strong>Customer Name:</strong> @appointment.CustomerName</p>
+                            <p><strong>@intCustomer. Customer Name:</strong> @appointment.CustomerName</p>
                             <p><strong>Technician Name:</strong> @appointment.TechnicianName</p>
                             <p><strong>Appointment Date:</strong> @appointment.AppointmentDate</p>
                             <p><strong>Service:</strong> @appointment.Service</p>
-                                <p><strong>Price:</strong> @appointment.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</p>
+                            <p><strong>Price:</strong> @appointment.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</p>
+                            intCustomer++;
                         }
+                        
                     }
                 }
             </div>
