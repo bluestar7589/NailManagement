@@ -21,6 +21,7 @@ namespace NailManagement.Data
                                join t in context.Technicians on a.TechnicianId equals t.TechnicianId
                                join s in context.Services on a.ServiceId equals s.ServiceId
                                where a.AppointmentDate.HasValue && a.AppointmentDate.Value.Date >= today
+                               orderby a.AppointmentDate ascending
                                select new AppointmentDTO
                                 {
                                     AppointmentID = a.AppointmentId,
