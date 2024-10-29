@@ -12,12 +12,12 @@ namespace NailManagement.Models
         public string Status { get; set; }
         public string Notes { get; set; }
 
-        public List<Technician> Technicians { get; set; } = null;
+        public List<Technician>? Technicians { get; set; } = null;
 
-        public List<Service> Services { get; set; } = null;
+        public List<Service>? Services { get; set; } = null;
 
-        public Customer Customer { get; set; } = null;
-        public Service Service { get; set; } = null;
-        public Technician Technician { get; set; } = null;
+        public Customer? Customer { get; set; } = null;
+        public Service? Service { get; set; } = null;
+        public Technician? Technician { get; set; } = null;
     }
 }
