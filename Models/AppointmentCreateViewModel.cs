@@ -1,5 +1,7 @@
 ﻿
 
+using System.ComponentModel.DataAnnotations;
+
 namespace NailManagement.Models
 {
     public class AppointmentCreateViewModel
@@ -8,6 +10,9 @@ namespace NailManagement.Models
         public int CustomerId { get; set; }
         public int TechnicianId { get; set; }
         public int ServiceId { get; set; }
+
+        [Required(ErrorMessage = "Appointment Date is required.")]
+        [DataType(DataType.Date)] 
         public DateTime? AppointmentDate { get; set; }
         public string Status { get; set; }
         public string Notes { get; set; }
