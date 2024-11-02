@@ -4,6 +4,13 @@ namespace NailManagement.Data
 {
     public static class PaymentDB
     {
+        /// <summary>
+        ///  This function to get all the payments from the range of date
+        /// </summary>
+        /// <param name="context">The ApplicationDbContext to connect to DB</param>
+        /// <param name="dateFrom">The begin date for the range</param>
+        /// <param name="dateTo">the end date for the range</param>
+        /// <returns>Return the list of all the payments from the range of date</returns>
         public static List<PaymentDTO> GetAllPaymentFromRange(ApplicationDbContext context, DateOnly dateFrom, DateOnly dateTo)
         {
             var payments = from p in context.Payments
