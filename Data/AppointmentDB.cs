@@ -41,11 +41,11 @@ namespace NailManagement.Data
         /// Add new appointment
         /// </summary>
         /// <param name="appt">Appointment information from customer</param>
-        public static void AddAppointment(Appointment appt)
+        public static void AddAppointment(ApplicationDbContext context, Appointment appointment)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
             {
-                context.Appointments.Add(appt);
+                
+                context.Appointments.Add(appointment);
                 context.SaveChanges();
             }
         }
@@ -54,9 +54,8 @@ namespace NailManagement.Data
         /// Delete the appointment from database
         /// </summary>
         /// <param name="appointment"></param>
-        public static void DeleteAppointment(Appointment appointment)
+        public static void DeleteAppointment(ApplicationDbContext context, Appointment appointment)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 context.Appointments.Remove(appointment);
                 context.SaveChanges();
@@ -67,9 +66,9 @@ namespace NailManagement.Data
         /// Update the appointment information
         /// </summary>
         /// <param name="appointment"></param>
-        public static void UpdateAppointment(Appointment appointment)
+        public static void UpdateAppointment(ApplicationDbContext context, Appointment appointment)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            
             {
 
                 var existingAppointment = context.Appointments.Find(appointment.AppointmentId);
@@ -89,9 +88,8 @@ namespace NailManagement.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static async Task<Appointment> GetAppointmentByIDAsync(int id)
+        public static async Task<Appointment?> GetAppointmentByIDAsync(ApplicationDbContext context, int id)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
                 // Get the appointment information by appointment ID
                 return await context.Appointments.FirstOrDefaultAsync(m => m.AppointmentId == id);
         }
