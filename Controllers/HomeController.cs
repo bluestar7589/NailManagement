@@ -22,7 +22,6 @@ namespace NailManagement.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = IdentityHelper.Admin)]
         public IActionResult Index()
         {
             var viewModel = new IndexViewModel

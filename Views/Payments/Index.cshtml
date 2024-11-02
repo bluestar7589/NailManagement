@@ -1,0 +1,60 @@
+﻿@model NailManagement.Models.PaymentIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Payments Report</h1>
+
+<form method="post" asp-action="Index">
+    <div class="form-group">
+        <label for="dateFrom">Date From:</label>
+        <input type="date" id="dateFrom" name="dateFrom" class="form-control" style="width: 200px;" />
+    </div>
+    <div class="form-group">
+        <label for="dateTo">Date To:</label>
+        <input type="date" id="dateTo" name="dateTo" class="form-control" style="width: 200px;" />
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Payment ID</th>
+            <th>Customer Name</th>
+            <th>Technician Name</th>
+            <th>Service</th>
+            <th>Amount</th>
+            <th>Payment Date</th>
+            <th>Payment Method</th>
+            <th>Tip</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payment in Model.Payments)
+        {
+            <tr>
+                <td>@payment.PaymentId</td>
+                <td>@payment.CustomerName</td>
+                <td>@payment.TechnicianName</td>
+                <td>@payment.Service</td>
+                <td>@payment.Amount</td>
+                <td>@payment.PaymentDate.ToString("MM/dd/yyyy")</td>
+                <td>@payment.PaymentMethod</td>
+                <td>@payment.Tip</td>
+            </tr>
+        }
+    </tbody>
+    @if (Model.Payments.Count != 0)
+    {
+        <tfoot class="fw-bold">
+            <tr>
+            <td colspan="4">Total Customers: @Model.Payments.Count</td>
+                <td>Total Amount: @Model.Payments.Sum(p => p.Amount).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
+            <td colspan="2"></td>
+                <td>Total Tip: @Model.Payments.Sum(p => p.Tip).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
+        </tr>
+    </tfoot>
+    }
+</table>
