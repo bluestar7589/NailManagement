@@ -1,0 +1,43 @@
+﻿@model IEnumerable<NailManagement.Models.AppointmentCreateViewModel>
+
+@{
+    ViewData["Title"] = "Appointments";
+}
+
+<h1>Appointments</h1>
+
+<p>
+	<a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Technician</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Notes</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var appointment in Model)
+        {
+            <tr>
+                <td>@appointment.Customer?.Email</td>
+                <td>@appointment.Technician?.Email</td>
+                <td>@appointment.Service?.ServiceName</td>
+                <td>@(appointment.AppointmentDate?.ToShortDateString() ?? "N/A")</td>
+                <td>@appointment.Status</td>
+                <td>@appointment.Notes</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@appointment.AppointmentId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@appointment.AppointmentId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@appointment.AppointmentId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
