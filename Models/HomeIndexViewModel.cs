@@ -2,7 +2,7 @@ using static NailManagement.Data.AppointmentDB;
 
 namespace NailManagement.Models
 {
-    public class IndexViewModel
+    public class HomeIndexViewModel
     {
         /// <summary>
         /// To get the appointment information
