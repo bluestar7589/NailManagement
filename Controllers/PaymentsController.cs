@@ -19,20 +19,39 @@ namespace NailManagement.Controllers
             _context = context;
         }
 
-        // GET: Payments
+        // 
+        /// <summary>
+        /// GET method: Get the report for the lastest day
+        /// </summary>
+        /// <returns>Return the list of payment report on the lastest date</returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            DateOnly? latestPaymentDate = await _context.Payments
+                .OrderByDescending(p => p.PaymentDate)
+                .Select(p => p.PaymentDate)
+                .FirstOrDefaultAsync();
+            // If there is no payment, set the latest payment date to the current date
+            if (latestPaymentDate == null) {
+                latestPaymentDate = DateOnly.FromDateTime(DateTime.Now);
+            }
+            // Get the list of payment report on the lastest date
             var viewModel = new PaymentIndexViewModel
             {
-                Payments = PaymentDB.GetAllPaymentFromRange(_context, DateOnly.FromDateTime(DateTime.Now), DateOnly.FromDateTime(DateTime.Now))
+                Payments = PaymentDB.GetAllPaymentFromRange(_context, (DateOnly)latestPaymentDate, (DateOnly)latestPaymentDate)
             };
             return View(viewModel);
         }
 
+        /// <summary>
+        /// POST method: To get the report from the range of date
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns>Return the list of payment report on the range</returns>
         [HttpPost]
         public async Task<IActionResult> Index(PaymentIndexViewModel viewModel)
         {
+            // Get the list of payment report on the range
             viewModel.Payments = PaymentDB.GetAllPaymentFromRange(_context, viewModel.DateFrom, viewModel.DateTo);
             return View(viewModel);
         }
