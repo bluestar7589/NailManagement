@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using NailManagement.Models;
 
 namespace NailManagement.Controllers
 {
+    [Authorize]
     public class AppointmentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -84,7 +86,7 @@ namespace NailManagement.Controllers
 
             return View(viewModel); // Pass the ViewModel to the view
         }
-
+        [AllowAnonymous]
         // GET: AppointmentController/Create
         public async Task<ActionResult> Create()
         {
@@ -96,6 +98,7 @@ namespace NailManagement.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         // POST: AppointmentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -24,7 +24,7 @@ namespace NailManagement.Controllers
 
         public IActionResult Index()
         {
-            var viewModel = new IndexViewModel
+            var viewModel = new HomeIndexViewModel
             {
                 // Get all appointments and technicians
                 Appointments = AppointmentDB.GetAllAppointments(_context),
