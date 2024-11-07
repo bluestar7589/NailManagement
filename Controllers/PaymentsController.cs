@@ -40,6 +40,8 @@ namespace NailManagement.Controllers
             // Get the list of payment report on the lastest date
             var viewModel = new PaymentIndexViewModel
             {
+                DateFrom = (DateOnly)latestPaymentDate,
+                DateTo = (DateOnly)latestPaymentDate,
                 Payments = PaymentDB.GetAllPaymentFromRange(_context, (DateOnly)latestPaymentDate, (DateOnly)latestPaymentDate)
             };
             return View(viewModel);

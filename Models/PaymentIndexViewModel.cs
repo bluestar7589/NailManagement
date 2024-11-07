@@ -10,11 +10,11 @@
         /// <summary>
         /// Date from the range of date
         /// </summary>
-        public DateOnly DateFrom { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly DateFrom { get; set; }
 
         /// <summary>
         /// Date to the range of date
         /// </summary>
-        public DateOnly DateTo { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly DateTo { get; set; }
     }
 }

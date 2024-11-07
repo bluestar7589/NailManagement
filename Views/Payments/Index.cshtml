@@ -8,12 +8,12 @@
 
 <form method="post" asp-action="Index">
     <div class="form-group">
-        <label for="dateFrom">Date From:</label>
-        <input type="date" id="dateFrom" name="dateFrom" class="form-control" style="width: 200px;" />
+        <label asp-for="DateFrom">Date From:</label>
+        <input asp-for="DateFrom" type="date" id="dateFrom" name="dateFrom" class="form-control" style="width: 200px;" />
     </div>
     <div class="form-group">
-        <label for="dateTo">Date To:</label>
-        <input type="date" id="dateTo" name="dateTo" class="form-control" style="width: 200px;" />
+        <label asp-for="DateTo">Date To:</label>
+        <input asp-for="DateTo" type="date" id="dateTo" name="dateTo" class="form-control" style="width: 200px;" />
     </div>
     <button type="submit" class="btn btn-primary">Filter</button>
 </form>
@@ -31,6 +31,8 @@
             <th>Tip</th>
         </tr>
     </thead>
+    @if (Model.Payments.Count != 0)
+    {
     <tbody>
         @foreach (var payment in Model.Payments)
         {
@@ -46,8 +48,6 @@
             </tr>
         }
     </tbody>
-    @if (Model.Payments.Count != 0)
-    {
         <tfoot class="fw-bold">
             <tr>
             <td colspan="4">Total Customers: @Model.Payments.Count</td>
@@ -55,6 +55,9 @@
             <td colspan="2"></td>
                 <td>Total Tip: @Model.Payments.Sum(p => p.Tip).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
         </tr>
-    </tfoot>
+        </tfoot>
+    } else
+    {
+        <h3>There are nothing on the list </h3>    
     }
 </table>
