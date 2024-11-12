@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace NailManagement.Models;
 
@@ -52,4 +53,43 @@ public class AppointmentDTO
 
     public String Notes { get; set; }
 
+}
+
+public class AppointmentCreateViewDTO
+{
+    // Customer information
+    [Required]
+    [Phone]
+    public string? PhoneNumber { get; set; }
+
+    [StringLength(50)]
+    public string? FirstName { get; set; }
+
+    [StringLength(50)]
+    public string? LastName { get; set; }
+
+    [DataType(DataType.Date)]
+    public DateOnly? DateOfBirth { get; set; }
+
+    [EmailAddress]
+    public string? Email { get; set; }
+
+    // Appointment details
+    [Required]
+    [DataType(DataType.DateTime)]
+    public DateTime Date { get; set; } // Date of the appointment
+
+    public string Notes { get; set; } // Additional notes for the appointment
+
+    // Dropdown selection IDs
+    [Required]
+    public int TechnicianId { get; set; } // Selected technician ID
+
+    [Required]
+    public int ServiceId { get; set; } // Selected service ID
+
+    // Lists of available options
+    public List<Technician> Technicians { get; set; } = new List<Technician>(); // Available technicians
+    public List<Service> Services { get; set; } = new List<Service>(); // Available services
+    public List<Customer> Customers { get; set; } = new List<Customer>(); // For reference only
 }
