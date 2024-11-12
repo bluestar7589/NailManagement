@@ -1,10 +1,11 @@
-﻿@model NailManagement.Models.AppointmentCreateViewModel
+﻿@model NailManagement.Models.AppointmentCreateViewDTO
 
 @{
     ViewData["Title"] = "Create";
+
 }
 
-<h1>Create</h1>
+<h1>Create Appointment</h1>
 
 <h4>Appointment</h4>
 <hr />
@@ -12,33 +13,45 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Phone Number Check -->
             <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
+                <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
+                <input asp-for="PhoneNumber" type="text" id="PhoneNumber" class="form-control" />
+                <!-- <button type="button" id="checkCustomerBtn" class="btn btn-secondary mt-2">Check Customer</button> -->
             </div>
+
+            <!-- Technician Selection -->
             <div class="form-group">
-                <label asp-for="TechnicianId" class="control-label"></label>
-                <select asp-for="TechnicianId" class ="form-control" asp-items="ViewBag.TechnicianId"></select>
+                <label asp-for="TechnicianId" class="control-label">Technician</label>
+                <select asp-for="TechnicianId" class="form-control" asp-items="@(new SelectList(Model.Technicians, nameof(Technician.TechnicianId), nameof(Technician.FirstName)))"></select>
+                <span asp-validation-for="TechnicianId" class="text-danger"></span>
             </div>
+
+            <!-- Service Selection -->
             <div class="form-group">
-                <label asp-for="ServiceId" class="control-label"></label>
-                <select asp-for="ServiceId" class ="form-control" asp-items="ViewBag.ServiceId"></select>
+                <label asp-for="ServiceId" class="control-label">Service</label>
+                <select asp-for="ServiceId" class="form-control" asp-items="@(new SelectList(Model.Services, nameof(Service.ServiceId), nameof(Service.ServiceName)))"></select>
+                <span asp-validation-for="ServiceId" class="text-danger"></span>
             </div>
+
+            
+            <!-- Appointment Date -->
             <div class="form-group">
-                <label asp-for="AppointmentDate" class="control-label"></label>
-                <input asp-for="AppointmentDate" class="form-control" />
-                <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
+
+
+            <!-- Notes -->
             <div class="form-group">
                 <label asp-for="Notes" class="control-label"></label>
                 <input asp-for="Notes" class="form-control" />
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
+
+            <!-- Submit Button -->
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -50,6 +63,10 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
