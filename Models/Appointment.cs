@@ -77,7 +77,7 @@ public class AppointmentCreateViewDTO
     // Appointment details
     [Required]
     [DataType(DataType.DateTime)]
-    public DateTime Date { get; set; } // Date of the appointment
+    public DateTime Date { get; set; } = DateTime.Today; // Date of the appointment, default to current date and time for all instances
 
     public string? Status { get; set; }
 
