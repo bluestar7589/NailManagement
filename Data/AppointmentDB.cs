@@ -93,5 +93,11 @@ namespace NailManagement.Data
                 // Get the appointment information by appointment ID
                 return await context.Appointments.FirstOrDefaultAsync(m => m.AppointmentId == id);
         }
+
+        public static bool CustomerExists(ApplicationDbContext context, string phoneNumber)
+        {
+            var customer = context.Customers.FirstOrDefault(c => c.PhoneNumber == phoneNumber);
+            return customer != null;
+        }
     }
 }
