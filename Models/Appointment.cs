@@ -79,6 +79,8 @@ public class AppointmentCreateViewDTO
     [DataType(DataType.DateTime)]
     public DateTime Date { get; set; } // Date of the appointment
 
+    public string? Status { get; set; }
+
     public string Notes { get; set; } // Additional notes for the appointment
 
     // Dropdown selection IDs
