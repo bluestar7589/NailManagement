@@ -110,7 +110,7 @@ namespace NailManagement.Controllers
             if (ModelState.IsValid)
             {
                 // Check if the phone number exists in the database
-                var customer = await _context.Customers.FirstOrDefaultAsync(c => c.PhoneNumber == viewDTO.PhoneNumber);
+                Customer customer = await _context.Customers.FirstOrDefaultAsync(c => c.PhoneNumber == viewDTO.PhoneNumber);
                 if (customer == null)
                 {
                     // Redirect to Customer creation page with the phone number
@@ -134,19 +134,13 @@ namespace NailManagement.Controllers
 
                 }
 
-                // Step 2: Validate the selected ServiceID
-                //var service = await _context.Services.FirstOrDefaultAsync(s => s.ServiceId == viewDTO.Services);
-                //if (service == null){
-                //    ModelState.AddModelError("ServiceId", "Invalid service selected.");
-                //    return View(viewDTO); // Return the view with error message if service is not found }
-                
                 var appointment = new Appointment
                 {
                     CustomerId = customer.CustomerId,
                     TechnicianId = viewDTO.TechnicianId,
                     ServiceId = viewDTO.ServiceId,
                     AppointmentDate = viewDTO.Date,
-                    Status = "Scheduled",
+                    Status = viewDTO.Status,
                     Notes = viewDTO.Notes
                 };
 
@@ -196,8 +190,11 @@ namespace NailManagement.Controllers
         // POST: AppointmentController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AppointmentCreateViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, AppointmentCreateViewDTO viewModel)
         {
+            // Remove the PhoneNumber validation error if it exists
+            ModelState.Remove(nameof(viewModel.PhoneNumber));
+
             if (ModelState.IsValid)
             {
                 var appointment = await _context.Appointments.FindAsync(id);
@@ -206,22 +203,25 @@ namespace NailManagement.Controllers
                     return NotFound();
                 }
 
+                // Check if the phone number exists in the database
+                Customer customer = await _context.Customers.FirstOrDefaultAsync(c => c.PhoneNumber == viewModel.PhoneNumber);
+                if (customer == null)
+                {
+                    // Redirect to Customer creation page with the phone number
+                    return RedirectToAction("Create", "Customer", new { phoneNumber = viewModel.PhoneNumber });
+                }
+
                 // Update appointment details
-                appointment.CustomerId = viewModel.CustomerId;
+                appointment.CustomerId = customer.CustomerId;
                 appointment.TechnicianId = viewModel.TechnicianId;
                 appointment.ServiceId = viewModel.ServiceId;
-                appointment.AppointmentDate = viewModel.AppointmentDate;
+                appointment.AppointmentDate = viewModel.Date;
                 appointment.Status = viewModel.Status;
                 appointment.Notes = viewModel.Notes;
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            // Repopulate ViewBag in case of an error
-            ViewBag.CustomerId = new SelectList(await _context.Customers.ToListAsync(), "CustomerId", "Email", viewModel.CustomerId);
-            ViewBag.TechnicianId = new SelectList(await _context.Technicians.ToListAsync(), "TechnicianId", "Email", viewModel.TechnicianId);
-            ViewBag.ServiceId = new SelectList(await _context.Services.ToListAsync(), "ServiceId", "ServiceName", viewModel.ServiceId);
 
             return View(viewModel);
         }
