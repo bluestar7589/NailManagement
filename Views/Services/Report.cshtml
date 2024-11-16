@@ -1,0 +1,62 @@
+﻿@model NailManagement.Models.ServiceReportViewModel
+@{
+    ViewData["Title"] = "Top Services";
+}
+
+<h1 class="text-center">Top Services</h1>
+
+<div class="d-flex justify-content-center">
+    <form method="post" asp-action="Report">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label asp-for="DateFrom">Date From:</label>
+                <input asp-for="DateFrom" type="date" id="dateFrom" name="dateFrom" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label asp-for="DateTo">Date To:</label>
+                <input asp-for="DateTo" type="date" id="dateTo" name="dateTo" class="form-control" />
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <ul>
+            <li>
+                <a asp-controller="Payments" asp-action="Index">Payments</a>
+            </li>
+            <li>
+                <a asp-controller="Services" asp-action="Report">Services</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-9">
+    @if (Model != null && Model.Services.Count > 0)
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Service Name</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var service in Model.Services)
+                {
+                    <tr>
+                        <td>@service.ServiceName</td>
+                        <td>@service.Count</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (Model != null)
+    {
+        <p>No services found in the selected date range.</p>
+    }
+    </div>
+</div>

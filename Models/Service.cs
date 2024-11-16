@@ -53,3 +53,13 @@ public partial class Service
     /// </summary>
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 }
+
+/// <summary>
+/// This class to present the top service in the salon
+/// </summary>
+public class ServiceTopDTO
+{
+    public String? ServiceName { get; set; }
+
+    public int Count { get; set; }
+}
