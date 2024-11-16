@@ -22,9 +22,29 @@ namespace NailManagement.Controllers
         }
 
         // GET: Services
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Services.ToListAsync());
+            return View(ServiceDB.GetAllServices(_context));
+        }
+
+        public async Task<IActionResult> ReportAsync()
+        {
+            DateOnly? latestPaymentDate = await _context.Payments
+                .OrderByDescending(p => p.PaymentDate)
+                .Select(p => p.PaymentDate)
+                .FirstOrDefaultAsync();
+            // If there is no payment, set the latest payment date to the current date
+            if (latestPaymentDate == null)
+            {
+                latestPaymentDate = DateOnly.FromDateTime(DateTime.Now);
+            }
+            var viewModel = new ServiceReportViewModel
+            {
+                DateFrom = (DateOnly)latestPaymentDate,
+                DateTo = (DateOnly)latestPaymentDate,
+                Services = ServiceDB.GetTopService(_context, (DateOnly)latestPaymentDate, (DateOnly)latestPaymentDate)
+            };
+            return View(viewModel);
         }
 
         // GET: Services/Details/5
