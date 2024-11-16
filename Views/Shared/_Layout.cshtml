@@ -35,14 +35,14 @@
                             @if (await UserManager.IsInRoleAsync(user, IdentityHelper.Admin))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Payments" asp-action="Index">Payment</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Payments" asp-action="Index">Reports</a>
                                 </li>
                             }
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Appointment" asp-action="Index">Appointments</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Rules</a>
                             </li>
                         } else
                         {
