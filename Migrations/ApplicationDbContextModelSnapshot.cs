@@ -605,6 +605,7 @@ namespace NailManagement.Migrations
                     b.HasOne("NailManagement.Models.Customer", "Customer")
                         .WithMany("Appointments")
                         .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK__Appointme__Custo__4316F928");
 
                     b.HasOne("NailManagement.Models.Service", "Service")
