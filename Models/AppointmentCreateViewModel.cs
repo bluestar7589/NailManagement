@@ -7,12 +7,12 @@ namespace NailManagement.Models
     public class AppointmentCreateViewModel
     {
         public int AppointmentId { get; set; }
-        public int CustomerId { get; set; }
-        public int TechnicianId { get; set; }
-        public int ServiceId { get; set; }
+        //public int CustomerId { get; set; }
+        //public int TechnicianId { get; set; }
+        //public int ServiceId { get; set; }
 
         [Required(ErrorMessage = "Appointment Date is required.")]
-        [DataType(DataType.Date)] 
+        [DataType(DataType.DateTime)] 
         public DateTime? AppointmentDate { get; set; }
         public string Status { get; set; }
         public string Notes { get; set; }
