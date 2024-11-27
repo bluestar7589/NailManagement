@@ -26,10 +26,10 @@
         @foreach (var appointment in Model)
         {
             <tr>
-                <td>@appointment.Customer?.Email</td>
-                <td>@appointment.Technician?.Email</td>
+                <td>@($"{appointment.Customer?.FirstName} {appointment.Customer?.LastName}")</td>
+                <td>@($"{appointment.Technician?.FirstName} {appointment.Technician?.LastName}")</td>
                 <td>@appointment.Service?.ServiceName</td>
-                <td>@(appointment.AppointmentDate?.ToShortDateString() ?? "N/A")</td>
+                <td>@(appointment.AppointmentDate?.ToString("MM/dd/yyyy hh:mm tt") ?? "N/A")</td>
                 <td>@appointment.Status</td>
                 <td>@appointment.Notes</td>
                 <td>

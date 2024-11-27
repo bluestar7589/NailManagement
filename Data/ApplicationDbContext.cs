@@ -57,6 +57,7 @@ namespace NailManagement.Data
 
                 entity.HasOne(d => d.Customer).WithMany(p => p.Appointments)
                     .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__Appointme__Custo__4316F928");
 
                 entity.HasOne(d => d.Service).WithMany(p => p.Appointments)

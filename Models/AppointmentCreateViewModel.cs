@@ -12,7 +12,7 @@ namespace NailManagement.Models
         public int ServiceId { get; set; }
 
         [Required(ErrorMessage = "Appointment Date is required.")]
-        [DataType(DataType.Date)] 
+        [DataType(DataType.DateTime)] 
         public DateTime? AppointmentDate { get; set; }
         public string Status { get; set; }
         public string Notes { get; set; }

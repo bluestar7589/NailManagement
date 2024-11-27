@@ -46,9 +46,17 @@ namespace NailManagement.Controllers
         }
 
         // GET: Customers/Create
-        public IActionResult Create()
+        public IActionResult Create(string phoneNumber, bool newCus = false)
         {
-            return View();
+            Customer customer = new Customer();
+
+            // If the phone number is passed from the appointment creation page, set the phone number to the customer
+            if (!string.IsNullOrEmpty(phoneNumber))
+            {
+                customer.PhoneNumber = phoneNumber;
+            }
+
+            return View(customer);
         }
 
         // POST: Customers/Create
@@ -56,16 +64,23 @@ namespace NailManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,FirstName,LastName,Email,PhoneNumber,JoinDate,LoyaltyPoints")] Customer customer)
+        public async Task<IActionResult> Create([Bind("CustomerId,FirstName,LastName,Email,PhoneNumber,DateOfBirth,JoinDate,LoyaltyPoints")] Customer customer)
         {
             if (ModelState.IsValid)
             {
+                // Add the new customer to the database
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+
+                return RedirectToAction("Create", "Appointment", new { phoneNumber = customer.PhoneNumber});  //{ phoneNumber = customer.PhoneNumber, newCus = true });
+
             }
+
+            // If the model is invalid, redisplay the form
             return View(customer);
         }
+
 
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -88,7 +103,7 @@ namespace NailManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FirstName,LastName,Email,PhoneNumber,JoinDate,LoyaltyPoints")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FirstName,LastName,Email,PhoneNumber,DateOfBirth,JoinDate,LoyaltyPoints")] Customer customer)
         {
             if (id != customer.CustomerId)
             {
