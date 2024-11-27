@@ -1,10 +1,11 @@
 ﻿@model NailManagement.Models.Customer
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Customer";
+    var appointmentDetails = ViewBag.AppointmentDetails as AppointmentCreateViewDTO;
 }
 
-<h1>Create</h1>
+<h1>Create Customer</h1>
 
 <h4>Customer</h4>
 <hr />
@@ -12,36 +13,43 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="LastName" class="control-label"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
+                <input asp-for="PhoneNumber" class="form-control" value="@Model.PhoneNumber" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
                 <input asp-for="DateOfBirth" class="form-control" type="date" min="1900-01-01" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="JoinDate" class="control-label"></label>
                 <input asp-for="JoinDate" class="form-control" type="date" min="1900-01-01" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="JoinDate" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -54,5 +62,8 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+

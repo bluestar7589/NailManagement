@@ -35,9 +35,6 @@ namespace NailManagement.Controllers
             var viewModels = appointments.Select(appointment => new AppointmentCreateViewModel
             {
                 AppointmentId = appointment.AppointmentId,
-                //CustomerId = appointment.CustomerId ?? 0,
-                //TechnicianId = appointment.TechnicianId ?? 0,
-                //ServiceId = appointment.ServiceId ?? 0,
                 AppointmentDate = appointment.AppointmentDate,
                 Status = appointment.Status,
                 Notes = appointment.Notes,
@@ -76,9 +73,6 @@ namespace NailManagement.Controllers
                 AppointmentDate = appointment.AppointmentDate,
                 Status = appointment.Status,
                 Notes = appointment.Notes,
-                //CustomerId = appointment.CustomerId ?? 0,
-                //TechnicianId = appointment.TechnicianId ?? 0,
-                //ServiceId = appointment.ServiceId ?? 0,
                 Customer = appointment.Customer, // Link the Customer entity
                 Technician = appointment.Technician, // Link the Technician entity
                 Service = appointment.Service // Link the Service entity
@@ -120,17 +114,16 @@ namespace NailManagement.Controllers
 
 
         [AllowAnonymous]
-        // GET: AppointmentController/Create
-        public async Task<ActionResult> Create()
+        // GET: Appointments/Create
+        public async Task<ActionResult> Create(string phoneNumber = null)
         {
-            // Create a new instance of the AppointmentCreateViewDTO
             var viewDTO = new AppointmentCreateViewDTO
             {
                 Technicians = await _context.Technicians.ToListAsync(),
                 Services = await _context.Services.ToListAsync(),
-                Customers = await _context.Customers.ToListAsync()
+                Customers = await _context.Customers.ToListAsync(),
+                Date = DateTime.Now // Default date
             };
-            
 
             return View(viewDTO);
         }
@@ -140,14 +133,17 @@ namespace NailManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                Customer customer = await _context.Customers
+                // Check if the customer exists by phone number
+                var customer = await _context.Customers
                     .FirstOrDefaultAsync(c => c.PhoneNumber == viewDTO.PhoneNumber);
 
+                // If customer does not exist, redirect to Customer/Create
                 if (customer == null)
                 {
-                    return RedirectToAction("Create", "Customers", new { phoneNumber = viewDTO.PhoneNumber });
+                    return RedirectToAction("Create", "Customers", new { phoneNumber = viewDTO.PhoneNumber, newCus = true });
                 }
 
+                // Create a new appointment
                 var appointment = new Appointment
                 {
                     CustomerId = customer.CustomerId,
@@ -163,7 +159,7 @@ namespace NailManagement.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // If model state is invalid, return to the view with the populated view model
+            // Repopulate the dropdown lists if ModelState is invalid
             viewDTO.Technicians = await _context.Technicians.ToListAsync();
             viewDTO.Services = await _context.Services.ToListAsync();
             return View(viewDTO);
@@ -211,52 +207,41 @@ namespace NailManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AppointmentCreateViewDTO viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var appointment = await _context.Appointments.FindAsync(id);
-                if (appointment == null)
+                return View(viewModel);
+            }
+
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            // Update appointment properties directly
+            appointment.TechnicianId = viewModel.TechnicianId;
+            appointment.ServiceId = viewModel.ServiceId;
+            appointment.AppointmentDate = viewModel.Date;
+            appointment.Status = viewModel.Status;
+            appointment.Notes = viewModel.Notes;
+
+            // Save changes to the database
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Appointments.Any(a => a.AppointmentId == id))
                 {
                     return NotFound();
                 }
-
-                // Check if the customer phone number has changed
-                if (appointment.Customer.PhoneNumber != viewModel.PhoneNumber)
-                {
-                    // Find the customer by the new phone number
-                    var customer = await _context.Customers.FirstOrDefaultAsync(c => c.PhoneNumber == viewModel.PhoneNumber);
-
-                    // If the customer doesn't exist, create a new one
-                    if (customer == null)
-                    {
-                        customer = new Customer
-                        {
-                            PhoneNumber = viewModel.PhoneNumber,
-                            FirstName = viewModel.FirstName,
-                            LastName = viewModel.LastName,
-                            Email = viewModel.Email,
-                            DateOfBirth = viewModel.DateOfBirth
-                        };
-                        _context.Customers.Add(customer);
-                        await _context.SaveChangesAsync();
-                    }
-
-                    // Update the appointment's CustomerId
-                    appointment.CustomerId = customer.CustomerId;
-                }
-
-                // Update other appointment details
-                appointment.TechnicianId = viewModel.TechnicianId;
-                appointment.ServiceId = viewModel.ServiceId;
-                appointment.AppointmentDate = viewModel.Date;
-                appointment.Status = viewModel.Status;
-                appointment.Notes = viewModel.Notes;
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                throw;
             }
 
-            return View(viewModel);
+            return RedirectToAction(nameof(Index));
         }
+
 
 
 

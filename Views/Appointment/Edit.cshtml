@@ -1,52 +1,104 @@
 ﻿@model NailManagement.Models.AppointmentCreateViewDTO
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Appointment";
 }
 
-<h1>Edit</h1>
+<h1>Edit Appointment</h1>
 
-<h4>Update Appointment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <!-- Technician Selection -->
-            <div class="form-group">
-                <label asp-for="TechnicianId" class="control-label">Technician</label>
-                <select asp-for="TechnicianId" class="form-control" asp-items="@(new SelectList(Model.Technicians, nameof(Technician.TechnicianId), nameof(Technician.FirstName)))"></select>
-                <span asp-validation-for="TechnicianId" class="text-danger"></span>
-            </div>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <!-- Service Selection -->
-            <div class="form-group">
-                <label asp-for="ServiceId" class="control-label">Service</label>
-                <select asp-for="ServiceId" class="form-control" asp-items="@(new SelectList(Model.Services, nameof(Service.ServiceId), nameof(Service.ServiceName)))"></select>
-                <span asp-validation-for="ServiceId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
-            <!-- Status -->
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" />
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    @* Hidden fields for immutable properties *@
+    <input type="hidden" asp-for="PhoneNumber" />
+    <input type="hidden" asp-for="FirstName" />
+    <input type="hidden" asp-for="LastName" />
+    <input type="hidden" asp-for="Email" />
+    <input type="hidden" asp-for="DateOfBirth" />
+
+    @* Display customer details in readonly mode *@
+    <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" class="form-control" asp-for="PhoneNumber" readonly />
     </div>
-</div>
+
+    <div class="form-group">
+        <label>First Name</label>
+        <input type="text" class="form-control" asp-for="FirstName" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" class="form-control" asp-for="LastName" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-control" asp-for="Email" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Date of Birth</label>
+        <input type="date" class="form-control" asp-for="DateOfBirth" readonly />
+    </div>
+
+    @* Editable fields *@
+    <div class="form-group">
+        <label for="TechnicianId">Technician</label>
+        <select asp-for="TechnicianId" class="form-control">
+            <option value="">Select Technician</option>
+            @foreach (var technician in Model.Technicians)
+            {
+                <option value="@technician.TechnicianId" selected="@(technician.TechnicianId == Model.TechnicianId)">
+                    @technician.FirstName @technician.LastName
+                </option>
+            }
+        </select>
+        <span asp-validation-for="TechnicianId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ServiceId">Service</label>
+        <select asp-for="ServiceId" class="form-control">
+            <option value="">Select Service</option>
+            @foreach (var service in Model.Services)
+            {
+                <option value="@service.ServiceId" selected="@(service.ServiceId == Model.ServiceId)">
+                    @service.ServiceName
+                </option>
+            }
+        </select>
+        <span asp-validation-for="ServiceId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Date" class="control-label"></label>
+        <input asp-for="Date" class="form-control" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label for="Status">Status</label>
+        <select asp-for="Status" class="form-control">
+            <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+            <option value="Confirmed" selected="@(Model.Status == "Confirmed")">Confirmed</option>
+            <option value="Completed" selected="@(Model.Status == "Completed")">Completed</option>
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Notes">Notes</label>
+        <textarea id="Notes" class="form-control" asp-for="Notes"></textarea>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="@Url.Action("Index", "Appointment")" class="btn btn-secondary">Cancel</a>
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -57,3 +109,5 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+

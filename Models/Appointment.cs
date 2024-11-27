@@ -57,6 +57,8 @@ public class AppointmentDTO
 
 public class AppointmentCreateViewDTO
 {
+    public int? CustomerId { get; set; }
+
     // Customer information
     [Required]
     [Phone]
@@ -81,7 +83,7 @@ public class AppointmentCreateViewDTO
 
     public string? Status { get; set; }
 
-    public string Notes { get; set; } // Additional notes for the appointment
+    public string? Notes { get; set; } // Additional notes for the appointment
 
     // Dropdown selection IDs
     [Required]
