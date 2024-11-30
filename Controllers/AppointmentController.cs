@@ -19,19 +19,17 @@ namespace NailManagement.Controllers
         }
 
         /// <summary>
-        /// Display a list of appointments
+        /// Retrieves and displays a list of all appointments.
         /// </summary>
-        /// <returns>The index view with a list of appointments.</returns>
+        /// <returns>The index view populated with a list of appointments.</returns>
         public async Task<IActionResult> Index()
         {
-            // Fetch appointments from the database
             var appointments = await _context.Appointments
                 .Include(a => a.Customer)
                 .Include(a => a.Technician)
                 .Include(a => a.Service)
                 .ToListAsync();
 
-            // Map appointments to the AppointmentCreateViewModel
             var viewModels = appointments.Select(appointment => new AppointmentCreateViewModel
             {
                 AppointmentId = appointment.AppointmentId,
@@ -40,47 +38,49 @@ namespace NailManagement.Controllers
                 Notes = appointment.Notes,
                 Customer = appointment.Customer,
                 Technician = appointment.Technician,
-                Service = appointment.Service 
+                Service = appointment.Service
             }).ToList();
 
-            // Return the view with the view models
             return View(viewModels);
         }
 
         /// <summary>
-        /// This function to get the detail for the appointment by AppointmentID
+        /// Retrieves the details of a specific appointment by its ID.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The ID of the appointment to retrieve.</param>
+        /// <returns>The details view of the specified appointment.</returns>
         public async Task<ActionResult> Details(int id)
         {
-            // Retrieve the appointment by ID
             var appointment = await _context.Appointments
-                .Include(a => a.Customer)    
+                .Include(a => a.Customer)
                 .Include(a => a.Service)
                 .Include(a => a.Technician)
                 .FirstOrDefaultAsync(a => a.AppointmentId == id);
 
             if (appointment == null)
             {
-                return NotFound(); // Handle case when appointment is not found
+                return NotFound();
             }
 
-            // Map to ViewModel
             var viewModel = new AppointmentCreateViewModel
             {
-                AppointmentId = appointment.AppointmentId, 
+                AppointmentId = appointment.AppointmentId,
                 AppointmentDate = appointment.AppointmentDate,
                 Status = appointment.Status,
                 Notes = appointment.Notes,
-                Customer = appointment.Customer, // Link the Customer entity
-                Technician = appointment.Technician, // Link the Technician entity
-                Service = appointment.Service // Link the Service entity
+                Customer = appointment.Customer,
+                Technician = appointment.Technician,
+                Service = appointment.Service
             };
 
-            return View(viewModel); // Pass the ViewModel to the view
+            return View(viewModel);
         }
 
+        /// <summary>
+        /// Checks if a customer exists based on their phone number.
+        /// </summary>
+        /// <param name="phoneNumber">The phone number of the customer to check.</param>
+        /// <returns>A JSON result indicating whether the customer exists and their details if found.</returns>
         [HttpGet]
         public async Task<IActionResult> CheckCustomer(string phoneNumber)
         {
@@ -89,7 +89,6 @@ namespace NailManagement.Controllers
                 return Json(new { exists = false });
             }
 
-            // Attempt to find a customer by phone number
             var customer = await _context.Customers
                 .Where(c => c.PhoneNumber == phoneNumber)
                 .Select(c => new
@@ -101,7 +100,6 @@ namespace NailManagement.Controllers
                 })
                 .FirstOrDefaultAsync();
 
-            // If customer is found, return their details
             if (customer != null)
             {
                 return Json(new { exists = true, customer });
@@ -112,9 +110,12 @@ namespace NailManagement.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Displays the appointment creation form.
+        /// </summary>
+        /// <param name="phoneNumber">Optional phone number to pre-fill customer information.</param>
+        /// <returns>The create view with necessary data for creating an appointment.</returns>
         [AllowAnonymous]
-        // GET: Appointments/Create
         public async Task<ActionResult> Create(string phoneNumber = null)
         {
             var viewDTO = new AppointmentCreateViewDTO
@@ -122,28 +123,30 @@ namespace NailManagement.Controllers
                 Technicians = await _context.Technicians.ToListAsync(),
                 Services = await _context.Services.ToListAsync(),
                 Customers = await _context.Customers.ToListAsync(),
-                Date = DateTime.Now // Default date
+                Date = DateTime.Now
             };
 
             return View(viewDTO);
         }
 
+        /// <summary>
+        /// Handles the submission of the appointment creation form.
+        /// </summary>
+        /// <param name="viewDTO">The data transfer object containing appointment details.</param>
+        /// <returns>Redirects to the index view if successful, otherwise redisplays the form with validation errors.</returns>
         [HttpPost]
         public async Task<IActionResult> Create(AppointmentCreateViewDTO viewDTO)
         {
             if (ModelState.IsValid)
             {
-                // Check if the customer exists by phone number
                 var customer = await _context.Customers
                     .FirstOrDefaultAsync(c => c.PhoneNumber == viewDTO.PhoneNumber);
 
-                // If customer does not exist, redirect to Customer/Create
                 if (customer == null)
                 {
                     return RedirectToAction("Create", "Customers", new { phoneNumber = viewDTO.PhoneNumber, newCus = true });
                 }
 
-                // Create a new appointment
                 var appointment = new Appointment
                 {
                     CustomerId = customer.CustomerId,
@@ -159,14 +162,16 @@ namespace NailManagement.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Repopulate the dropdown lists if ModelState is invalid
             viewDTO.Technicians = await _context.Technicians.ToListAsync();
             viewDTO.Services = await _context.Services.ToListAsync();
             return View(viewDTO);
         }
 
-
-
+        /// <summary>
+        /// Displays the appointment edit form for a specific appointment.
+        /// </summary>
+        /// <param name="id">The ID of the appointment to edit.</param>
+        /// <returns>The edit view populated with the appointment details.</returns>
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -176,7 +181,7 @@ namespace NailManagement.Controllers
             }
 
             var appointment = await _context.Appointments
-                .Include(a => a.Customer) // Include Customer entity
+                .Include(a => a.Customer)
                 .FirstOrDefaultAsync(a => a.AppointmentId == id);
 
             if (appointment == null)
@@ -200,9 +205,12 @@ namespace NailManagement.Controllers
             return View(appointmentCreateViewModelDTO);
         }
 
-
-
-        // POST: AppointmentController/Edit/5
+        /// <summary>
+        /// Handles the submission of the appointment edit form.
+        /// </summary>
+        /// <param name="id">The ID of the appointment to edit.</param>
+        /// <param name="viewModel">The data transfer object containing updated appointment details.</param>
+        /// <returns>Redirects to the index view if successful, otherwise redisplays the form with validation errors.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AppointmentCreateViewDTO viewModel)
@@ -218,14 +226,12 @@ namespace NailManagement.Controllers
                 return NotFound();
             }
 
-            // Update appointment properties directly
             appointment.TechnicianId = viewModel.TechnicianId;
             appointment.ServiceId = viewModel.ServiceId;
             appointment.AppointmentDate = viewModel.Date;
             appointment.Status = viewModel.Status;
             appointment.Notes = viewModel.Notes;
 
-            // Save changes to the database
             try
             {
                 await _context.SaveChangesAsync();
@@ -242,25 +248,24 @@ namespace NailManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-
-
-
-        // GET: AppointmentController/Delete/5
+        /// <summary>
+        /// Displays the confirmation view for deleting a specific appointment.
+        /// </summary>
+        /// <param name="id">The ID of the appointment to delete.</param>
+        /// <returns>The delete view populated with the appointment details.</returns>
         public async Task<ActionResult> Delete(int id)
         {
             var appointment = await _context.Appointments
-                .Include(a => a.Customer)    // Include the related Customer
-                .Include(a => a.Technician)  // Include the related Technician
-                .Include(a => a.Service)      // Include the related Service
-                .FirstOrDefaultAsync(a => a.AppointmentId == id); // Fetch the appointment by ID
+                .Include(a => a.Customer)
+                .Include(a => a.Technician)
+                .Include(a => a.Service)
+                .FirstOrDefaultAsync(a => a.AppointmentId == id);
 
             if (appointment == null)
             {
                 return NotFound();
             }
 
-            // Create the ViewModel and populate it with the appointment data
             var viewModel = new AppointmentCreateViewModel
             {
                 AppointmentId = appointment.AppointmentId,
@@ -275,7 +280,12 @@ namespace NailManagement.Controllers
             return View(viewModel);
         }
 
-        // POST: AppointmentController/Delete/5
+        /// <summary>
+        /// Handles the deletion of a specific appointment.
+        /// </summary>
+        /// <param name="id">The ID of the appointment to delete.</param>
+        /// <param name="collection">The form collection containing additional data.</param>
+        /// <returns>Redirects to the index view if successful, otherwise redisplays the delete view.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id, IFormCollection collection)
