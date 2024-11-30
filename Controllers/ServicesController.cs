@@ -11,22 +11,36 @@ using NailManagement.Models;
 
 namespace NailManagement.Controllers
 {
+    /// <summary>
+    /// Controller for managing services.
+    /// </summary>
     [Authorize]
     public class ServicesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServicesController"/> class.
+        /// </summary>
+        /// <param name="context">The application database context.</param>
         public ServicesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Services
+        /// <summary>
+        /// Gets the list of all services.
+        /// </summary>
+        /// <returns>The view with the list of services.</returns>
         public IActionResult Index()
         {
             return View(ServiceDB.GetAllServices(_context));
         }
 
+        /// <summary>
+        /// Generates a report of services.
+        /// </summary>
+        /// <returns>The view with the service report.</returns>
         public async Task<IActionResult> ReportAsync()
         {
             DateOnly? latestPaymentDate = await _context.Payments
@@ -47,7 +61,11 @@ namespace NailManagement.Controllers
             return View(viewModel);
         }
 
-        // GET: Services/Details/5
+        /// <summary>
+        /// Gets the details of a specific service.
+        /// </summary>
+        /// <param name="id">The ID of the service.</param>
+        /// <returns>The view with the service details.</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -65,15 +83,20 @@ namespace NailManagement.Controllers
             return View(service);
         }
 
-        // GET: Services/Create
+        /// <summary>
+        /// Displays the create service form.
+        /// </summary>
+        /// <returns>The view with the create service form.</returns>
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Services/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Creates a new service.
+        /// </summary>
+        /// <param name="service">The service to create.</param>
+        /// <returns>The view with the created service.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ServiceId,ServiceName,Description,Price,DurationMinutes")] Service service)
@@ -87,7 +110,11 @@ namespace NailManagement.Controllers
             return View(service);
         }
 
-        // GET: Services/Edit/5
+        /// <summary>
+        /// Displays the edit service form.
+        /// </summary>
+        /// <param name="id">The ID of the service to edit.</param>
+        /// <returns>The view with the edit service form.</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -103,9 +130,12 @@ namespace NailManagement.Controllers
             return View(service);
         }
 
-        // POST: Services/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edits an existing service.
+        /// </summary>
+        /// <param name="id">The ID of the service to edit.</param>
+        /// <param name="service">The service to edit.</param>
+        /// <returns>The view with the edited service.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ServiceId,ServiceName,Description,Price,DurationMinutes")] Service service)
@@ -138,7 +168,11 @@ namespace NailManagement.Controllers
             return View(service);
         }
 
-        // GET: Services/Delete/5
+        /// <summary>
+        /// Displays the delete service confirmation form.
+        /// </summary>
+        /// <param name="id">The ID of the service to delete.</param>
+        /// <returns>The view with the delete service confirmation form.</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -156,7 +190,11 @@ namespace NailManagement.Controllers
             return View(service);
         }
 
-        // POST: Services/Delete/5
+        /// <summary>
+        /// Deletes a service.
+        /// </summary>
+        /// <param name="id">The ID of the service to delete.</param>
+        /// <returns>The view with the deleted service.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -171,6 +209,11 @@ namespace NailManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Checks if a service exists.
+        /// </summary>
+        /// <param name="id">The ID of the service.</param>
+        /// <returns>True if the service exists, otherwise false.</returns>
         private bool ServiceExists(int id)
         {
             return _context.Services.Any(e => e.ServiceId == id);
