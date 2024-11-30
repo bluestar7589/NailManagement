@@ -11,23 +11,37 @@ using NailManagement.Models;
 
 namespace NailManagement.Controllers
 {
+    /// <summary>
+    /// Controller for managing technicians.
+    /// </summary>
     [Authorize]
     public class TechniciansController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TechniciansController"/> class.
+        /// </summary>
+        /// <param name="context">The application database context.</param>
         public TechniciansController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Technicians
+        /// <summary>
+        /// Gets the list of technicians.
+        /// </summary>
+        /// <returns>A view of the list of technicians.</returns>
         public async Task<IActionResult> Index()
         {
             return View(await _context.Technicians.ToListAsync());
         }
 
-        // GET: Technicians/Details/5
+        /// <summary>
+        /// Gets the details of a specific technician.
+        /// </summary>
+        /// <param name="id">The technician ID.</param>
+        /// <returns>A view of the technician details, or a 404 error if not found.</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,15 +59,20 @@ namespace NailManagement.Controllers
             return View(technician);
         }
 
-        // GET: Technicians/Create
+        /// <summary>
+        /// Displays the create technician form.
+        /// </summary>
+        /// <returns>A view of the create technician form.</returns>
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Technicians/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Creates a new technician.
+        /// </summary>
+        /// <param name="technician">The technician to create.</param>
+        /// <returns>A redirect to the index view if successful; otherwise, the create view.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TechnicianId,Specialties,Rating,ProfilePicture,FirstName,LastName,Email,PhoneNumber,DateOfBirth")] Technician technician)
@@ -67,7 +86,11 @@ namespace NailManagement.Controllers
             return View(technician);
         }
 
-        // GET: Technicians/Edit/5
+        /// <summary>
+        /// Displays the edit technician form.
+        /// </summary>
+        /// <param name="id">The technician ID.</param>
+        /// <returns>A view of the edit technician form, or a 404 error if not found.</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,9 +106,12 @@ namespace NailManagement.Controllers
             return View(technician);
         }
 
-        // POST: Technicians/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edits an existing technician.
+        /// </summary>
+        /// <param name="id">The technician ID.</param>
+        /// <param name="technician">The technician to edit.</param>
+        /// <returns>A redirect to the index view if successful; otherwise, the edit view.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TechnicianId,Specialties,Rating,ProfilePicture,FirstName,LastName,Email,PhoneNumber,DateOfBirth")] Technician technician)
@@ -118,7 +144,11 @@ namespace NailManagement.Controllers
             return View(technician);
         }
 
-        // GET: Technicians/Delete/5
+        /// <summary>
+        /// Displays the delete technician confirmation form.
+        /// </summary>
+        /// <param name="id">The technician ID.</param>
+        /// <returns>A view of the delete technician confirmation form.</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -136,7 +166,11 @@ namespace NailManagement.Controllers
             return View(technician);
         }
 
-        // POST: Technicians/Delete/5
+        /// <summary>
+        /// Deletes a technician.
+        /// </summary>
+        /// <param name="id">The technician ID.</param>
+        /// <returns>A redirect to the index view.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -151,6 +185,11 @@ namespace NailManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Checks if a technician exists.
+        /// </summary>
+        /// <param name="id">The technician ID.</param>
+        /// <returns>True if the technician exists; otherwise, false.</returns>
         private bool TechnicianExists(int id)
         {
             return _context.Technicians.Any(e => e.TechnicianId == id);

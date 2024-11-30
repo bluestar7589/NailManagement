@@ -11,23 +11,37 @@ using NailManagement.Models;
 
 namespace NailManagement.Controllers
 {
+    /// <summary>
+    /// Controller for managing customers.
+    /// </summary>
     [Authorize]
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomersController"/> class.
+        /// </summary>
+        /// <param name="context">The database context.</param>
         public CustomersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Customers
+        /// <summary>
+        /// Displays a list of customers.
+        /// </summary>
+        /// <returns>The view with the list of customers.</returns>
         public async Task<IActionResult> Index()
         {
             return View(await _context.Customers.ToListAsync());
         }
 
-        // GET: Customers/Details/5
+        /// <summary>
+        /// Displays the details of a specific customer.
+        /// </summary>
+        /// <param name="id">The ID of the customer.</param>
+        /// <returns>The view with the customer details.</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,12 +59,16 @@ namespace NailManagement.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Create
+        /// <summary>
+        /// Displays the form to create a new customer.
+        /// </summary>
+        /// <param name="phoneNumber">The phone number to pre-fill in the form.</param>
+        /// <param name="newCus">Indicates if the customer is new.</param>
+        /// <returns>The view with the create customer form.</returns>
         public IActionResult Create(string phoneNumber, bool newCus = false)
         {
             Customer customer = new Customer();
 
-            // If the phone number is passed from the appointment creation page, set the phone number to the customer
             if (!string.IsNullOrEmpty(phoneNumber))
             {
                 customer.PhoneNumber = phoneNumber;
@@ -59,30 +77,30 @@ namespace NailManagement.Controllers
             return View(customer);
         }
 
-        // POST: Customers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Handles the form submission to create a new customer.
+        /// </summary>
+        /// <param name="customer">The customer to create.</param>
+        /// <returns>The view with the create customer form or redirects to the appointment creation page.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CustomerId,FirstName,LastName,Email,PhoneNumber,DateOfBirth,JoinDate,LoyaltyPoints")] Customer customer)
         {
             if (ModelState.IsValid)
             {
-                // Add the new customer to the database
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
-
-
-                return RedirectToAction("Create", "Appointment", new { phoneNumber = customer.PhoneNumber});  //{ phoneNumber = customer.PhoneNumber, newCus = true });
-
+                return RedirectToAction("Create", "Appointment", new { phoneNumber = customer.PhoneNumber });
             }
 
-            // If the model is invalid, redisplay the form
             return View(customer);
         }
 
-
-        // GET: Customers/Edit/5
+        /// <summary>
+        /// Displays the form to edit an existing customer.
+        /// </summary>
+        /// <param name="id">The ID of the customer to edit.</param>
+        /// <returns>The view with the edit customer form.</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,9 +116,12 @@ namespace NailManagement.Controllers
             return View(customer);
         }
 
-        // POST: Customers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Handles the form submission to edit an existing customer.
+        /// </summary>
+        /// <param name="id">The ID of the customer to edit.</param>
+        /// <param name="customer">The customer to edit.</param>
+        /// <returns>The view with the edit customer form or redirects to the customer list.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FirstName,LastName,Email,PhoneNumber,DateOfBirth,JoinDate,LoyaltyPoints")] Customer customer)
@@ -133,7 +154,11 @@ namespace NailManagement.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Delete/5
+        /// <summary>
+        /// Displays the form to delete an existing customer.
+        /// </summary>
+        /// <param name="id">The ID of the customer to delete.</param>
+        /// <returns>The view with the delete customer form.</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,7 +176,11 @@ namespace NailManagement.Controllers
             return View(customer);
         }
 
-        // POST: Customers/Delete/5
+        /// <summary>
+        /// Handles the form submission to delete an existing customer.
+        /// </summary>
+        /// <param name="id">The ID of the customer to delete.</param>
+        /// <returns>Redirects to the customer list.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -166,6 +195,11 @@ namespace NailManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Checks if a customer exists.
+        /// </summary>
+        /// <param name="id">The ID of the customer.</param>
+        /// <returns>True if the customer exists, otherwise false.</returns>
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.CustomerId == id);
